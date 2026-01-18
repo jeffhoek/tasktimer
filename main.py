@@ -17,13 +17,6 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    await database.connect()
-    yield
-    await database.disconnect()
-
-
 @app.post("/track", response_model=TaskItem)
 async def track(task: NewTaskItem):
     print(task)
