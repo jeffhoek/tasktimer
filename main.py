@@ -31,7 +31,7 @@ async def track(task: NewTaskItem):
     query = task_table.insert().values(data)
     last_record_id = await database.execute(query)
 
-    return {"id": last_record_id}
+    return {"id": last_record_id, "user_id": task.user_id}
 
 
 @app.post("/stop", response_model=TaskItem)
