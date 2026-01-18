@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from datetime import time, datetime
 from database import database, task_table
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from models import (
     TaskOut,
     NewTaskItem, TaskItem)
@@ -36,11 +36,18 @@ async def track(task: NewTaskItem):
 
 @app.post("/stop", response_model=TaskItem)
 async def stop(task: TaskItem):
+    select_query = task_table.select().where(
+        (task_table.c.id == task.id) & (task_table.c.user_id == task.user_id)
+    )
+    existing_task = await database.fetch_one(select_query)
+    if existing_task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+
     end_time = datetime.now()
-    query = (
+    update_query = (
         task_table.update().where(task_table.c.id == task.id).where(task_table.c.user_id == task.user_id).values(end_time=end_time)
     )
-    await database.execute(query)
+    await database.execute(update_query)
     return task
 
 
