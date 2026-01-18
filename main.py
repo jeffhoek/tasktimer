@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 from datetime import time, datetime
 from database import database, task_table
+import uvicorn
 from fastapi import FastAPI, HTTPException
 from models import (
     TaskOut,
@@ -72,3 +73,8 @@ async def get_times(user_id: int, date: str):
         result.append({**task, "time_spent": duration.total_seconds()})
 
     return result
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+
