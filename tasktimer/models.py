@@ -15,4 +15,3 @@ class TaskOut(BaseModel):
     id: int
     description: str
     time_spent: float
-

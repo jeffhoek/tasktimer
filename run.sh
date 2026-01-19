@@ -1,2 +1,2 @@
-uvicorn main:app --reload
+uvicorn tasktimer.main:app --reload
 
