@@ -29,4 +29,3 @@ metadata.create_all(engine)
 
 # Initialize a database connection.
 database = databases.Database(DATABASE_URL)
-

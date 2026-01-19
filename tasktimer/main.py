@@ -1,10 +1,10 @@
 import os
 from contextlib import asynccontextmanager
 from datetime import time, datetime
-from database import database, task_table
+from .database import database, task_table
 import uvicorn
 from fastapi import FastAPI, HTTPException
-from models import (
+from .models import (
     TaskOut,
     NewTaskItem, TaskItem)
 
