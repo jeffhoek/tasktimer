@@ -17,7 +17,7 @@ task_table = sqlalchemy.Table(
     sqlalchemy.Column("user_id", sqlalchemy.Integer),
     sqlalchemy.Column("description", sqlalchemy.String),
     sqlalchemy.Column("start_time", sqlalchemy.DateTime),
-    sqlalchemy.Column("end_time", sqlalchemy.DateTime)
+    sqlalchemy.Column("end_time", sqlalchemy.DateTime),
 )
 
 # Create an engine that stores data in the local directory's data.db file.

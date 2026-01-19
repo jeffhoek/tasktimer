@@ -36,8 +36,7 @@ class TestTrackEndpoint(unittest.TestCase):
         mock_database.disconnect = AsyncMock()
 
         response = self.client.post(
-            "/track",
-            json={"user_id": 123, "description": "Test task"}
+            "/track", json={"user_id": 123, "description": "Test task"}
         )
 
         self.assertEqual(response.status_code, 200)
@@ -66,19 +65,18 @@ class TestStopEndpoint(unittest.TestCase):
     def test_stop_existing_task(self, mock_database):
         mock_database.connect = AsyncMock()
         mock_database.disconnect = AsyncMock()
-        mock_database.fetch_one = AsyncMock(return_value={
-            "id": 1,
-            "user_id": 123,
-            "description": "Test task",
-            "start_time": datetime.now(),
-            "end_time": None
-        })
+        mock_database.fetch_one = AsyncMock(
+            return_value={
+                "id": 1,
+                "user_id": 123,
+                "description": "Test task",
+                "start_time": datetime.now(),
+                "end_time": None,
+            }
+        )
         mock_database.execute = AsyncMock()
 
-        response = self.client.post(
-            "/stop",
-            json={"id": 1, "user_id": 123}
-        )
+        response = self.client.post("/stop", json={"id": 1, "user_id": 123})
 
         self.assertEqual(response.status_code, 200)
         data = response.json()
@@ -91,10 +89,7 @@ class TestStopEndpoint(unittest.TestCase):
         mock_database.disconnect = AsyncMock()
         mock_database.fetch_one = AsyncMock(return_value=None)
 
-        response = self.client.post(
-            "/stop",
-            json={"id": 999, "user_id": 123}
-        )
+        response = self.client.post("/stop", json={"id": 999, "user_id": 123})
 
         self.assertEqual(response.status_code, 404)
         self.assertEqual(response.json()["detail"], "Task not found")
@@ -113,15 +108,17 @@ class TestTimesEndpoint(unittest.TestCase):
 
         start = datetime(2024, 1, 15, 9, 0, 0)
         end = datetime(2024, 1, 15, 10, 30, 0)
-        mock_database.fetch_all = AsyncMock(return_value=[
-            {
-                "id": 1,
-                "user_id": 123,
-                "description": "Task 1",
-                "start_time": start,
-                "end_time": end
-            }
-        ])
+        mock_database.fetch_all = AsyncMock(
+            return_value=[
+                {
+                    "id": 1,
+                    "user_id": 123,
+                    "description": "Task 1",
+                    "start_time": start,
+                    "end_time": end,
+                }
+            ]
+        )
 
         response = self.client.get("/times?user_id=123&date=2024-01-15")
 
@@ -150,15 +147,17 @@ class TestTimesEndpoint(unittest.TestCase):
         mock_database.disconnect = AsyncMock()
 
         start = datetime(2024, 1, 15, 9, 0, 0)
-        mock_database.fetch_all = AsyncMock(return_value=[
-            {
-                "id": 1,
-                "user_id": 123,
-                "description": "Ongoing task",
-                "start_time": start,
-                "end_time": None
-            }
-        ])
+        mock_database.fetch_all = AsyncMock(
+            return_value=[
+                {
+                    "id": 1,
+                    "user_id": 123,
+                    "description": "Ongoing task",
+                    "start_time": start,
+                    "end_time": None,
+                }
+            ]
+        )
 
         response = self.client.get("/times?user_id=123&date=2024-01-15")
 

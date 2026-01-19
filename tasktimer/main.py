@@ -4,9 +4,7 @@ from datetime import time, datetime
 from .database import database, task_table
 import uvicorn
 from fastapi import FastAPI, HTTPException
-from .models import (
-    TaskOut,
-    NewTaskItem, TaskItem)
+from .models import TaskOut, NewTaskItem, TaskItem
 
 
 @asynccontextmanager
@@ -40,7 +38,10 @@ async def stop(task: TaskItem):
 
     end_time = datetime.now()
     update_query = (
-        task_table.update().where(task_table.c.id == task.id).where(task_table.c.user_id == task.user_id).values(end_time=end_time)
+        task_table.update()
+        .where(task_table.c.id == task.id)
+        .where(task_table.c.user_id == task.user_id)
+        .values(end_time=end_time)
     )
     await database.execute(update_query)
     return task

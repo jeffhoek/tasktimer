@@ -8,3 +8,4 @@ databases[postgresql]
 pydantic
 python-dotenv
 httpx
+black
