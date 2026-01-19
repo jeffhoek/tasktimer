@@ -7,3 +7,4 @@ databases[sqlite]
 databases[postgresql]
 pydantic
 python-dotenv
+httpx
