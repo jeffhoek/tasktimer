@@ -20,7 +20,10 @@ app = FastAPI(lifespan=lifespan)
 @app.post("/track", response_model=TaskItem)
 async def track(task: NewTaskItem):
     print(task)
-    data = {**task.model_dump(), "start_time": datetime.now()}
+    data = {**task.model_dump(), "start_"
+    ""
+    "
+    time": datetime.now()}
     query = task_table.insert().values(data)
     last_record_id = await database.execute(query)
 
