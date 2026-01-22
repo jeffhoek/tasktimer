@@ -3,7 +3,7 @@
 import json
 
 import requests
-from langchain_core.tools import tool
+from langchain.tools import tool
 
 # Configurable base URL for the API
 BASE_URL: str = "http://localhost:8000"
