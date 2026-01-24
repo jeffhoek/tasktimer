@@ -1,5 +1,7 @@
 # TaskTimer
 
+[![CI](https://github.com/jeffhoek/tasktimer/actions/workflows/ci.yml/badge.svg)](https://github.com/jeffhoek/tasktimer/actions/workflows/ci.yml)
+
 A FastAPI application for tracking time spent on tasks.
 
 ## API
