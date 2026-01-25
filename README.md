@@ -4,6 +4,13 @@
 
 A FastAPI application for tracking time spent on tasks.
 
+## Requirements
+
+- Python: [uv](https://docs.astral.sh/uv/) is recommended but you can also use pure Python + pip.
+- SQL database: [SQLite](https://sqlite.org/) and [Postgres](https://sqlite.org/) have been tested.
+- Curl: You will need [curl]https://curl.se/ to run the example API requests below.
+
+
 ## API
 
 ### POST /track
@@ -36,46 +43,45 @@ curl "http://localhost:8000/times?user_id=123&date=2024-01-15"
 
 **Response:** `[{"id": 1, "description": "Working on feature X", "time_spent": 3600.0}]`
 
+
 ## Quickstart
 
-1. Create and activate a virtual environment:
+### Setup environment
 
-### [uv](https://docs.astral.sh/uv/) (recommended)
+#### [uv](https://docs.astral.sh/uv/) (recommended)
 
-```
+```bash
 uv sync
 ```
 
-### pip
+#### pip (alternatively)
+> _If you ran the `uv sync` command above then skip these steps._
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 ```
 
-2. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Set up environment variables:
+### 2. Configure secrets
 ```bash
 cp .env.example .env
 # Edit .env with your DATABASE_URL
 ```
 
-4. Run the application:
+### 3. Run the application
 
-### uv
-```
+#### uv
+```bash
 uv run uvicorn tasktimer.main:app --reload
 ```
 
-### Python venv / pip
+#### Python venv / pip
 
 ```bash
-./run.sh
-# or
 uvicorn tasktimer.main:app --reload
 ```
 
