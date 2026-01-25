@@ -39,6 +39,15 @@ curl "http://localhost:8000/times?user_id=123&date=2024-01-15"
 ## Quickstart
 
 1. Create and activate a virtual environment:
+
+### `uv` (recommended)
+
+```
+uv sync
+```
+
+### pip
+
 ```bash
 python -m venv .venv
 source .venv/bin/activate
@@ -56,6 +65,14 @@ cp .env.example .env
 ```
 
 4. Run the application:
+
+### uv
+```
+uv run uvicorn tasktimer.main:app --reload
+```
+
+### Python venv / pip
+
 ```bash
 ./run.sh
 # or
