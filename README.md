@@ -40,7 +40,7 @@ curl "http://localhost:8000/times?user_id=123&date=2024-01-15"
 
 1. Create and activate a virtual environment:
 
-### `uv` (recommended)
+### [uv](https://docs.astral.sh/uv/) (recommended)
 
 ```
 uv sync
