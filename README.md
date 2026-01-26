@@ -8,7 +8,7 @@ A FastAPI application for tracking time spent on tasks.
 
 - Python: [uv](https://docs.astral.sh/uv/) is recommended but you can also use pure Python + pip.
 - SQL database: [SQLite](https://sqlite.org/) and [Postgres](https://sqlite.org/) have been tested.
-- Curl: You will need [curl]https://curl.se/ to run the example API requests below.
+- Curl: You will need [curl](https://curl.se/) to run the example API requests below.
 
 
 ## API
@@ -104,3 +104,36 @@ black --check .
 # Apply formatting
 black .
 ```
+
+
+## OpenShift Deployment
+
+Deploy to OpenShift using the [s2i](https://github.com/openshift/source-to-image) builder with the following commands below. (If your OpenShift instance doesn't have the version of Python specified in [.python-version](./.python-version) and [pyproject.toml](./pyproject.toml) then you may need to install the template for the correct python version.)
+
+First, create a new project:
+
+```
+oc new-project tasktimer
+```
+
+Next, create the app:
+
+```
+oc new-app -e=DATABASE_URL="postgresql://pguser:pgpassword@pghost:someport/somedatabase?sslmode=require" "https://github.com/jeffhoek/tasktimer.git"
+```
+
+Once the build completes you'll need to create/expose a route in order to test with curl.
+
+Create the route:
+
+```
+oc create route edge --service=tasktimer
+```
+
+Now you should be able to use curl to test the API. If you are testing on [OpenShift Local](), then the curl command might look something like this:
+
+```
+curl -k -XPOST -H "content-type: application/json" "https://tasktimer-tasktimer.apps-crc.testing/track" -d '{"user_id": 123, "description": "Working on feature X"}'
+```
+
+The other curl examples above should also work, but you'll need to update the URL accordingly.
