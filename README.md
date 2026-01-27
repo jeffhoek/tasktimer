@@ -111,23 +111,49 @@ black .
 Deploy to OpenShift using the [s2i](https://github.com/openshift/source-to-image) builder with the following commands below. (If your OpenShift instance doesn't have the version of Python specified in [.python-version](./.python-version) and [pyproject.toml](./pyproject.toml) then you may need to install the template for the correct python version.)
 
 First, create a new project:
-
 ```
 oc new-project tasktimer
 ```
 
+Next, create the `DATABASE_URL` connection string as a secret. (We will set this secret on the deployment after creating the app.)
+```
+oc create secret generic app-secret --from-literal=DATABASE_URL="postgresql://pguser:pgpassword@pghost:someport/somedatabase?sslmode=require"
+```
+
 Next, create the app:
-
 ```
-oc new-app -e=DATABASE_URL="postgresql://pguser:pgpassword@pghost:someport/somedatabase?sslmode=require" "https://github.com/jeffhoek/tasktimer.git"
+oc new-app "https://github.com/jeffhoek/tasktimer.git"
 ```
 
-Once the build completes you'll need to create/expose a route in order to test with curl.
+After creating the app you will need to set the secret on the deployment. Use this command:
+```
+oc set env --from=secret/app-secret deploy/tasktimer
+```
+
+After the build completes ensure the pod is up running and shows `1/1` in the READY column.
+```
+oc get pods
+```
+```
+NAME                        READY   STATUS      RESTARTS   AGE
+tasktimer-1-build           0/1     Completed   0          14m
+tasktimer-7db964699-hbtvx   1/1     Running     0          8m46s
+```
+
+Next, create a route in order to test with curl.
 
 Create the route:
-
 ```
 oc create route edge --service=tasktimer
+```
+
+Get the route:
+```
+oc get route
+```
+```
+NAME        HOST/PORT                                 PATH   SERVICES    PORT       TERMINATION   WILDCARD
+tasktimer   tasktimer-tasktimer.apps-crc.testing          tasktimer   8080-tcp   edge          None
 ```
 
 Now you should be able to use curl to test the API. If you are testing on [OpenShift Local](), then the curl command might look something like this:
