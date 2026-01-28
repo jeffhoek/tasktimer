@@ -115,9 +115,9 @@ First, create a new project:
 oc new-project tasktimer
 ```
 
-Next, create the `DATABASE_URL` connection string as a secret. (We will set this secret on the deployment after creating the app.)
+Next, create the `DATABASE_URL` connection string as a secret. (We will set this secret on the deployment after creating the app.) If you're running Postgres on your localhost the connection string might look something like this:
 ```
-oc create secret generic app-secret --from-literal=DATABASE_URL="postgresql://pguser:pgpassword@pghost:someport/somedatabase?sslmode=require"
+oc create secret generic app-secret --from-literal=DATABASE_URL="postgresql://postgresuser:postgrespw@My-MacBook-Pro.local:5432/tasktimer"
 ```
 
 Next, create the app:
@@ -162,4 +162,4 @@ Now you should be able to use curl to test the API. If you are testing on [OpenS
 curl -k -XPOST -H "content-type: application/json" "https://tasktimer-tasktimer.apps-crc.testing/track" -d '{"user_id": 123, "description": "Working on feature X"}'
 ```
 
-The other curl examples above should also work, but you'll need to update the URL accordingly.
+The other curl examples above should also work, but you'll need to update the URL and data payload accordingly.
