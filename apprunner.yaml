@@ -1,0 +1,11 @@
+version: 1.0
+runtime: python3 
+build:
+  commands:
+    - pip install uv # Install uv using the default pip
+    - uv pip install --system  # Use uv to install dependencies from pyproject.toml or requirements.txt into the system Python environment
+run:
+  command: uvicorn tasktimer.main:app --reload
+  network:
+    port: 8080
+
