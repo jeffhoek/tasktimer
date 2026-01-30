@@ -3,8 +3,9 @@ runtime: python311
 build:
   commands:
     build:
-      - pip3 install -r requirements.txt
+      - echo "skipping build..."
 run:
+  runtime-version: 3.11
   pre-run:
     - pip3 install -r requirements.txt
   command: python3 -m uvicorn tasktimer.main:app --host 0.0.0.0 --port 8080
