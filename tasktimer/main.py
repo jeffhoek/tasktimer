@@ -3,8 +3,9 @@ from contextlib import asynccontextmanager
 from datetime import time, datetime
 from .database import database, task_table
 import uvicorn
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from .models import TaskOut, NewTaskItem, TaskItem
+from .auth import get_current_user, AuthenticatedUser
 
 
 @asynccontextmanager
@@ -17,20 +18,35 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
+@app.get("/health")
+async def health():
+    """Health check endpoint for load balancer."""
+    return {"status": "healthy"}
+
+
 @app.post("/track", response_model=TaskItem)
-async def track(task: NewTaskItem):
-    print(task)
-    data = {**task.model_dump(), "start_time": datetime.now()}
+async def track(
+    task: NewTaskItem,
+    current_user: AuthenticatedUser = Depends(get_current_user),
+):
+    data = {
+        "description": task.description,
+        "user_id": current_user.user_id,
+        "start_time": datetime.now(),
+    }
     query = task_table.insert().values(data)
     last_record_id = await database.execute(query)
 
-    return {"id": last_record_id, "user_id": task.user_id}
+    return {"id": last_record_id, "user_id": current_user.user_id}
 
 
 @app.post("/stop", response_model=TaskItem)
-async def stop(task: TaskItem):
+async def stop(
+    task_id: int,
+    current_user: AuthenticatedUser = Depends(get_current_user),
+):
     select_query = task_table.select().where(
-        (task_table.c.id == task.id) & (task_table.c.user_id == task.user_id)
+        (task_table.c.id == task_id) & (task_table.c.user_id == current_user.user_id)
     )
     existing_task = await database.fetch_one(select_query)
     if existing_task is None:
@@ -39,24 +55,25 @@ async def stop(task: TaskItem):
     end_time = datetime.now()
     update_query = (
         task_table.update()
-        .where(task_table.c.id == task.id)
-        .where(task_table.c.user_id == task.user_id)
+        .where(task_table.c.id == task_id)
+        .where(task_table.c.user_id == current_user.user_id)
         .values(end_time=end_time)
     )
     await database.execute(update_query)
-    return task
+    return {"id": task_id, "user_id": current_user.user_id}
 
 
 @app.get("/times", response_model=list[TaskOut])
-async def get_times(user_id: int, date: str):
-    # Using `int` and `str` parameters instead of Pydantic models
-    # tells FastAPI we want to get these values from the query string.
+async def get_times(
+    date: str,
+    current_user: AuthenticatedUser = Depends(get_current_user),
+):
     selected_date = datetime.strptime(date, "%Y-%m-%d").date()
     start_of_day = datetime.combine(selected_date, time.min)
     end_of_day = datetime.combine(selected_date, time.max)
 
     query = task_table.select().where(
-        (task_table.c.user_id == user_id)
+        (task_table.c.user_id == current_user.user_id)
         & (task_table.c.start_time <= end_of_day)
         & ((task_table.c.end_time >= start_of_day) | (task_table.c.end_time.is_(None)))
     )
