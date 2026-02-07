@@ -1,6 +1,7 @@
 # TaskTimer
 
 [![CI](https://github.com/jeffhoek/tasktimer/actions/workflows/ci.yml/badge.svg)](https://github.com/jeffhoek/tasktimer/actions/workflows/ci.yml) [![CodeQL Advanced](https://github.com/jeffhoek/tasktimer/actions/workflows/codeql.yml/badge.svg)](https://github.com/jeffhoek/tasktimer/actions/workflows/codeql.yml)
+[![uv-secure](https://github.com/jeffhoek/tasktimer/actions/workflows/uvsecure.yml/badge.svg)](https://github.com/jeffhoek/tasktimer/actions/workflows/uvsecure.yml)
 
 A FastAPI application for tracking time spent on tasks.
 
