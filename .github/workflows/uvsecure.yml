@@ -1,0 +1,36 @@
+name: Run uv-secure
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '0 3 * * 0'
+
+jobs:
+  uv-secure-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        # Using the official setup-uv action to install uv and cache it
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: '3.12'
+
+      - name: Install uv-secure as a uv tool
+        # uv-secure is installed as a tool for easy CLI access
+        run: uv tool install uv-secure
+
+      - name: Run uv-secure on the lock file
+        # This step will fail the job if vulnerabilities are found
+        run: uv tool run uv-secure
+        # The command automatically looks for uv.lock, pylock.toml, or requirements.txt files
+
