@@ -21,7 +21,7 @@ jobs:
 
       - name: Install uv
         # Using the official setup-uv action to install uv and cache it
-        uses: astral-sh/setup-uv@v1
+        uses: astral-sh/setup-uv@v7
         with:
           python-version: '3.12'
 
