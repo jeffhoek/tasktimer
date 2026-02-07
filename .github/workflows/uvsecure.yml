@@ -1,0 +1,32 @@
+name: Python SCA Check with uv-secure
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '0 3 * * 0'
+
+jobs:
+  sca_check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    # (Optional) Install uv if you want to generate the lock file first
+    - name: Install uv and dependencies
+      uses: astral-sh/setup-uv@v1
+      with:
+        python-version: '3.12' # Specify your Python version
+    - run: uv pip install --system # Install dependencies
+
+    # Run the uv-secure action to scan for vulnerabilities
+    - name: Run uv-secure scan
+      uses: owenlamont/uv-secure@0.15.4
+      with:
+        # Optional: path to your lock file, defaults to uv.lock
+        lockfile: 'uv.lock'
+        # Optional: exit code on vulnerability found (default true)
+        exit-code: true 
