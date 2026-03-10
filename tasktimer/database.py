@@ -14,7 +14,7 @@ task_table = sqlalchemy.Table(
     "tasks",
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column("user_id", sqlalchemy.Integer),
+    sqlalchemy.Column("user_id", sqlalchemy.String(36)),
     sqlalchemy.Column("description", sqlalchemy.String),
     sqlalchemy.Column("start_time", sqlalchemy.DateTime),
     sqlalchemy.Column("end_time", sqlalchemy.DateTime),

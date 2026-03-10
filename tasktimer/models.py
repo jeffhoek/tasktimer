@@ -2,13 +2,12 @@ from pydantic import BaseModel
 
 
 class NewTaskItem(BaseModel):
-    user_id: int
     description: str
 
 
 class TaskItem(BaseModel):
     id: int
-    user_id: int
+    user_id: str
 
 
 class TaskOut(BaseModel):
